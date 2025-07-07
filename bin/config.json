@@ -1,5 +1,5 @@
 {
-    "bind": "0.0.0.0",
+    "bind": "localhost",
     "notify": {
         "url": ""
     },
@@ -17,7 +17,7 @@
         "cert": "./cert.pem"
     },
     "http": {
-        "port": 8000
+        "port": 8010
     },
     "https": {
         "port": 8443,
