@@ -23,5 +23,12 @@
         "port": 8443,
         "key": "./key.pem",
         "cert": "./cert.pem"
+    },
+    "static": {
+        "router": "/",
+        "root": "./video"
+    },
+    "record": {
+        "path": "./video/record"
     }
 }
