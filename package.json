@@ -26,6 +26,8 @@
     "nodemon": "^3.1.10"
   },
   "dependencies": {
+    "@tus/file-store": "^2.0.0",
+    "@tus/server": "^2.2.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "http2-express": "^1.0.0"

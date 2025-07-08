@@ -13,6 +13,7 @@ const NodeHttpServer = require("./server/http_server.js");
 const NodeRtmpServer = require("./server/rtmp_server.js");
 const NodeRecordServer = require("./server/record_server.js");
 const NodeNotifyServer = require("./server/notify_server.js");
+const TusServer = require("./server/tus_server.js");
 
 class NodeMediaServer {
   constructor(config) {
@@ -21,12 +22,13 @@ class NodeMediaServer {
     logger.info(`Homepage: ${Package.homepage}`);
     logger.info(`License: ${Package.license}`);
     logger.info(`Author: ${Package.author}`);
-    
+
     Context.config = config;
     this.httpServer = new NodeHttpServer(config);
     this.rtmpServer = new NodeRtmpServer(config);
     this.recordServer = new NodeRecordServer(config);
     this.notifyServer = new NodeNotifyServer(config);
+    this.tusServer = new TusServer(config);
   }
 
   /**
@@ -39,12 +41,11 @@ class NodeMediaServer {
   }
 
   run() {
-
     this.httpServer.run();
     this.rtmpServer.run();
-    this.recordServer.run(); 
+    this.recordServer.run();
     this.notifyServer.run();
-    
+    this.tusServer.run();
   }
 }
 

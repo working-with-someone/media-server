@@ -24,6 +24,9 @@
         "key": "./key.pem",
         "cert": "./cert.pem"
     },
+    "tus": {
+        "port": 1080
+    },
     "static": {
         "router": "/",
         "root": "./video"
