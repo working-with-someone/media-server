@@ -6,7 +6,8 @@
   "main": "src/index.js",
   "scripts": {
     "watch": "nodemon bin/app.js",
-    "start": "node bin/app.js"
+    "start": "node bin/app.js",
+    "lint" : "yarn eslint --fix"
   },
   "keywords": [
     "rtmp",
@@ -20,17 +21,23 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@eslint/js": "^9.15.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.13",
     "eslint": "^9.15.0",
     "eslint-plugin-jsdoc": "50.6.0",
     "globals": "^15.12.0",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.36.0"
   },
   "dependencies": {
     "@tus/file-store": "^2.0.0",
     "@tus/server": "^2.2.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "http2-express": "^1.0.0"
+    "http2-express-bridge": "^1.0.7"
   },
   "engines": {
     "node": ">=18.0.0"
