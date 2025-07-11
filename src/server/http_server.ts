@@ -1,33 +1,35 @@
-// @ts-check
 //
 //  Created by Chen Mingliang on 23/12/01.
 //  illuspas@msn.com
 //  Copyright (c) 2023 Nodemedia. All rights reserved.
 //
 
-const fs = require("fs");
-const http = require("http");
-const http2 = require("http2");
-const express = require("express");
-const cors = require("cors");
-const logger = require("../core/logger.js");
-const http2Express = require("http2-express");
-const FlvSession = require("../session/flv_session.js");
+import fs from "fs";
+import http from "http";
+import http2 from "http2";
+import express from "express";
+import cors from "cors";
+import logger from "../core/logger";
+import http2Express from "http2-express-bridge";
+import FlvSession from "../session/flv_session";
+
+/* eslint-disable */
 
 class NodeHttpServer {
-  constructor(config) {
+  config: any;
+  httpServer: http.Server | undefined;
+  httpsServer: http2.Http2SecureServer | undefined;
+
+  constructor(config: any) {
     this.config = config;
     const app = http2Express(express);
 
     if (config.static?.router && config.static?.root) {
-      // @ts-ignore
       app.use(config.static.router, express.static(config.static.root));
     }
 
-    // @ts-ignore
     app.use(cors());
 
-    // @ts-ignore
     app.all("/:app/:name.flv", this.handleFlv);
 
     if (this.config.http?.port) {
@@ -53,14 +55,10 @@ class NodeHttpServer {
     });
   };
 
-  /**
-   * @param {express.Request} req
-   * @param {express.Response} res
-   */
-  handleFlv = (req, res) => {
+  handleFlv = (req: express.Request, res: express.Response) => {
     const session = new FlvSession(req, res);
     session.run();
   };
 }
 
-module.exports = NodeHttpServer;
+export default NodeHttpServer;

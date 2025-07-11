@@ -1,17 +1,14 @@
-// @ts-check
 //
 //  Created by Chen Mingliang on 23/11/30.
 //  illuspas@msn.com
 //  Copyright (c) 2023 Nodemedia. All rights reserved.
 //
 
-const crypto = require("crypto");
+/* eslint-disable */
 
-/**
- *
- * @returns {string} 
- */
-function generateRandomId() {
+import crypto from "crypto";
+
+function generateRandomId(): string {
   let result = Date.now().toString(36);
   const characters = "0123456789abcdefghijklmnopqrstuvwxyz";
   const charactersLength = characters.length;
@@ -24,6 +21,29 @@ function generateRandomId() {
 }
 
 class BaseSession {
+  id: string;
+  ip: string;
+  protocol: string;
+  streamHost: string;
+  streamApp: string;
+  streamName: string;
+  streamPath: string;
+  streamQuery: any;
+  createTime: number;
+  endTime: number;
+  videoCodec: number;
+  videoWidth: number;
+  videoHeight: number;
+  videoFramerate: number;
+  videoDatarate: number;
+  audioCodec: number;
+  audioChannels: number;
+  audioSamplerate: number;
+  audioDatarate: number;
+  inBytes: number;
+  outBytes: number;
+  filePath: string;
+
   constructor() {
     this.id = generateRandomId();
     this.ip = "";
@@ -52,20 +72,12 @@ class BaseSession {
     this.filePath = "";
   }
 
-  /**
-   * @abstract
-   * @param {Buffer} buffer
-   */
-  sendBuffer = (buffer) => {
+  sendBuffer = (buffer: Buffer) => {
   };
 
-  /**
-   * @abstract
-   */
   close = () => {
 
   };
 }
 
-
-module.exports = BaseSession;
+export default BaseSession;

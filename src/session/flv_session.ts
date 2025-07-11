@@ -1,28 +1,26 @@
-// @ts-check
 //
 //  Created by Chen Mingliang on 23/11/30.
 //  illuspas@msn.com
 //  Copyright (c) 2023 NodeMedia. All rights reserved.
 //
 
-const express = require("express");
-const Flv = require("../protocol/flv.js");
-const logger = require("../core/logger.js");
-const Context = require("../core/context.js");
-const AVPacket = require("../core/avpacket.js");
-const BaseSession = require("./base_session.js");
-const BroadcastServer = require("../server/broadcast_server.js");
+/* eslint-disable */
+import express from "express";
+import Flv from "../protocol/flv";
+import logger from "../core/logger";
+import Context from "../core/context";
+import AVPacket from "../core/avpacket";
+import BaseSession from "./base_session";
+import BroadcastServer from "../server/broadcast_server";
 
-/**
- * @class
- * @augments BaseSession
- */
 class FlvSession extends BaseSession {
-  /**
-   * @param {express.Request} req
-   * @param {express.Response} res
-   */
-  constructor(req, res) {
+  req: express.Request;
+  res: express.Response;
+  flv: Flv;
+  broadcast: BroadcastServer;
+  isPublisher: boolean | undefined;
+
+  constructor(req: express.Request, res: express.Response) {
     super();
     this.req = req;
     this.res = res;
@@ -34,7 +32,6 @@ class FlvSession extends BaseSession {
     this.streamName = req.params.name;
     this.streamPath = "/" + this.streamApp + "/" + this.streamName;
     this.streamQuery = req.query;
-    /**@type {BroadcastServer} */
     this.broadcast = Context.broadcasts.get(this.streamPath) ?? new BroadcastServer();
     Context.broadcasts.set(this.streamPath, this.broadcast);
   }
@@ -73,10 +70,7 @@ class FlvSession extends BaseSession {
     logger.info(`FLV session ${this.id} ${this.ip} start push ${this.streamPath}`);
   };
 
-  /**
-   * @param {Buffer} data
-   */
-  onData = (data) => {
+  onData = (data: Buffer) => {
     this.inBytes += data.length;
     let err = this.flv.parserData(data);
     if (err != null) {
@@ -94,26 +88,15 @@ class FlvSession extends BaseSession {
     }
   };
 
-  /**
-   * 
-   * @param {string} err 
-   */
-  onError = (err) => {
+  onError = (err: string) => {
     logger.error(`FLV session ${this.id} ${this.ip} socket error, ${err}`);
   };
 
-  /**
-   * @param {AVPacket} packet 
-   */
-  onPacket = (packet) => {
+  onPacket = (packet: AVPacket) => {
     this.broadcast.broadcastMessage(packet);
   };
 
-  /**
-   * @override
-   * @param {Buffer} buffer
-   */
-  sendBuffer = (buffer) => {
+  sendBuffer = (buffer: Buffer) => {
     if (this.res.writableEnded) {
       return;
     }
@@ -121,12 +104,9 @@ class FlvSession extends BaseSession {
     this.res.write(buffer);
   };
 
-  /**
-   * @override
-   */
   close = () => {
     this.res.end();
   };
 }
 
-module.exports = FlvSession;
+export default FlvSession;

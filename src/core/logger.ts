@@ -1,4 +1,3 @@
-// @ts-check
 //
 //  Created by Chen Mingliang on 23/12/01.
 //  illuspas@msn.com
@@ -6,12 +5,15 @@
 //
 
 class Logger {
+  levels: string[];
+  level: string;
+
   constructor(level = "info") {
     this.levels = ["trace", "debug", "info", "warn", "error"];
     this.level = this.levels.includes(level) ? level : "info";
   }
 
-  log(message, logLevel = "info") {
+  log(message: string, logLevel = "info") {
     const messageLevel = this.levels.indexOf(logLevel);
     const currentLevel = this.levels.indexOf(this.level);
 
@@ -25,40 +27,25 @@ class Logger {
     return now.toLocaleString();
   }
 
-  /**
-   * @param {string} message 
-   */
-  trace(message) {
+  trace(message: string) {
     this.log(message, "trace");
   }
 
-  /**
-   * @param {string} message 
-   */
-  debug(message) {
+  debug(message: string) {
     this.log(message, "debug");
   }
 
-  /**
-   * @param {string} message 
-   */
-  info(message) {
+  info(message: string) {
     this.log(message, "info");
   }
 
-  /**
-   * @param {string} message 
-   */
-  warn(message) {
+  warn(message: string) {
     this.log(message, "warn");
   }
 
-  /**
-   * @param {string} message 
-   */
-  error(message) {
+  error(message: string) {
     this.log(message, "error");
   }
 }
 
-module.exports = new Logger("debug");
+export default new Logger("debug");

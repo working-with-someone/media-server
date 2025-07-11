@@ -1,13 +1,14 @@
-// @ts-check
 //
 //  Created by Chen Mingliang on 23/12/01.
 //  illuspas@msn.com
 //  Copyright (c) 2023 Nodemedia. All rights reserved.
 //
 
-const AMF = require("./amf.js");
-const logger = require("../core/logger.js");
-const AVPacket = require("../core/avpacket.js");
+/* eslint-disable */
+
+import * as AMF from "./amf";
+import logger from "../core/logger";
+import AVPacket from "../core/avpacket";
 
 const FLV_MEDIA_TYPE_AUDIO = 8;
 const FLV_MEDIA_TYPE_VIDEO = 9;
@@ -60,10 +61,18 @@ const PacketTypeCodedFramesX = 3;
 const PacketTypeMetadata = 4;
 const PacketTypeMPEG2TSSequenceStart = 5;
 
-/**
- * @class
- */
 class Flv {
+  parserBuffer: Buffer;
+  parserState: number;
+  parserHeaderBytes: number;
+  parserTagBytes: number;
+  parserTagType: number;
+  parserTagSize: number;
+  parserTagTime: number;
+  parserTagCapacity: number;
+  parserTagData: Buffer;
+  parserPreviousBytes: number;
+
   constructor() {
     this.parserBuffer = Buffer.alloc(13);
     this.parserState = FLV_PARSE_INIT;
@@ -77,19 +86,11 @@ class Flv {
     this.parserPreviousBytes = 0;
   }
 
-  /**
-   * @abstract
-   * @param {AVPacket} avpacket 
-   */
-  onPacketCallback = (avpacket) => {
+  onPacketCallback: (avpacket: AVPacket) => void = (avpacket) => {
 
   };
 
-  /**
-   * @param {Buffer} buffer
-   * @returns {string | null} error
-   */
-  parserData = (buffer) => {
+  parserData = (buffer: Buffer): string | null => {
     let s = buffer.length;
     let n = 0;
     let p = 0;
@@ -148,7 +149,7 @@ class Flv {
           this.parserPreviousBytes = 0;
           const parserPreviousNSize = this.parserBuffer.readUint32BE();
           if (parserPreviousNSize === this.parserTagSize + 11) {
-            let packet = Flv.parserTag(this.parserTagType, this.parserTagTime, this.parserTagSize, this.parserTagData);
+            const packet = Flv.parserTag(this.parserTagType, this.parserTagTime, this.parserTagSize, this.parserTagData);
             this.onPacketCallback(packet);
           } else {
             return "flv tag parser error";
@@ -160,10 +161,7 @@ class Flv {
     return null;
   };
 
-  /**
-   * @param {number} size
-   */
-  parserTagAlloc = (size) => {
+  parserTagAlloc = (size: number) => {
     if (this.parserTagCapacity < size) {
       this.parserTagCapacity = size * 2;
       const newBuffer = Buffer.alloc(this.parserTagCapacity);
@@ -172,12 +170,7 @@ class Flv {
     }
   };
 
-  /**
-   * @param {boolean} hasAudio
-   * @param {boolean} hasVideo
-   * @returns {Buffer} 
-   */
-  static createHeader = (hasAudio, hasVideo) => {
+  static createHeader = (hasAudio: boolean, hasVideo: boolean): Buffer => {
     const buffer = Buffer.from([0x46, 0x4c, 0x56, 0x01, 0x00, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x00]);
     if (hasAudio) {
       buffer[4] |= 4;
@@ -189,11 +182,7 @@ class Flv {
     return buffer;
   };
 
-  /**
-   * @param {AVPacket} avpacket
-   * @returns {Buffer}
-   */
-  static createMessage = (avpacket) => {
+  static createMessage = (avpacket: AVPacket): Buffer => {
     const buffer = Buffer.alloc(11 + avpacket.size + 4);
     buffer[0] = avpacket.codec_type;
     buffer.writeUintBE(avpacket.size, 1, 3);
@@ -206,15 +195,8 @@ class Flv {
     return buffer;
   };
 
-  /**
-   * @param {number} type
-   * @param {number} time
-   * @param {number} size
-   * @param {Buffer} data
-   * @returns {AVPacket}
-   */
-  static parserTag = (type, time, size, data) => {
-    let packet = new AVPacket();
+  static parserTag = (type: number, time: number, size: number, data: Buffer): AVPacket => {
+    const packet = new AVPacket();
     packet.codec_type = type;
     packet.pts = time;
     packet.dts = time;
@@ -285,4 +267,4 @@ class Flv {
   };
 }
 
-module.exports = Flv;
+export default Flv;

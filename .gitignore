@@ -29,3 +29,6 @@ node_modules
 
 # video
 video
+
+# compiled file
+dist

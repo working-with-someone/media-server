@@ -1,22 +1,29 @@
-// @ts-check
 //
 //  Created by Chen Mingliang on 24/11/28.
 //  illuspas@msn.com
 //  Copyright (c) 2024 NodeMedia. All rights reserved.
 //
 
-const logger = require("./core/logger.js");
-const Package = require("../package.json");
-const Context = require("./core/context.js");
-const BaseSession = require("./session/base_session.js");
-const NodeHttpServer = require("./server/http_server.js");
-const NodeRtmpServer = require("./server/rtmp_server.js");
-const NodeRecordServer = require("./server/record_server.js");
-const NodeNotifyServer = require("./server/notify_server.js");
-const TusServer = require("./server/tus_server.js");
+import logger from "./core/logger";
+import Package from "../package.json";
+import Context from "./core/context";
+import BaseSession from "./session/base_session";
+import NodeHttpServer from "./server/http_server";
+import NodeRtmpServer from "./server/rtmp_server";
+import NodeRecordServer from "./server/record_server";
+import NodeNotifyServer from "./server/notify_server";
+import TusServer from "./server/tus_server";
+
+import { MediaServerConfig } from "./config/server.config";
 
 class NodeMediaServer {
-  constructor(config) {
+  httpServer: NodeHttpServer;
+  rtmpServer: NodeRtmpServer;
+  recordServer: NodeRecordServer;
+  notifyServer: NodeNotifyServer;
+  tusServer: TusServer;
+
+  constructor(config: MediaServerConfig) {
     logger.level = "debug";
     logger.info(`Node-Media-Server v${Package.version}`);
     logger.info(`Homepage: ${Package.homepage}`);
@@ -36,7 +43,7 @@ class NodeMediaServer {
    * @param {string} eventName 
    * @param {(session:BaseSession)=>void} listener 
    */
-  on(eventName, listener) {
+  on(eventName: string, listener: (session: BaseSession) => void) {
     Context.eventEmitter.on(eventName, listener);
   }
 
@@ -49,4 +56,4 @@ class NodeMediaServer {
   }
 }
 
-module.exports = NodeMediaServer;
+export default NodeMediaServer;

@@ -1,49 +1,47 @@
-// @ts-check
 //
 //  Created by Chen Mingliang on 25/04/26.
 //  illuspas@msn.com
 //  Copyright (c) 2025 NodeMedia. All rights reserved.
 //
-const Context = require("../core/context.js");
-const BaseSession = require("../session/base_session");
+import Context from "../core/context";
+import BaseSession from "../session/base_session";
+
+/* eslint-disable */
 
 class NodeNotifyServer {
-  constructor(config) {
+  config: any;
+
+  constructor(config: any) {
     this.config = config;
   }
 
   run() {
-    if(!this.config.notify?.url ) {
+    if (!this.config.notify?.url) {
       return;
     }
 
-    Context.eventEmitter.on("postPlay", (session) => {
+    Context.eventEmitter.on("postPlay", (session: BaseSession) => {
       this.notify("postPlay", session);
     });
-  
-    Context.eventEmitter.on("donePlay", (session) => {
+
+    Context.eventEmitter.on("donePlay", (session: BaseSession) => {
       this.notify("donePlay", session);
     });
-  
-    Context.eventEmitter.on("postPublish", (session) => {
+
+    Context.eventEmitter.on("postPublish", (session: BaseSession) => {
       this.notify("postPublish", session);
     });
-  
-    Context.eventEmitter.on("donePublish", (session) => {
+
+    Context.eventEmitter.on("donePublish", (session: BaseSession) => {
       this.notify("donePublish", session);
     });
-  
-    Context.eventEmitter.on("doneRecord", (session) => {
+
+    Context.eventEmitter.on("doneRecord", (session: BaseSession) => {
       this.notify("doneRecord", session);
     });
   }
 
-  /**
-   * 
-   * @param {string} action 
-   * @param {BaseSession} session 
-   */
-  notify(action, session) {
+  notify(action: string, session: BaseSession) {
     fetch(this.config.notify.url, {
       method: "POST",
       body: JSON.stringify({
@@ -66,9 +64,9 @@ class NodeNotifyServer {
         session.close();
       }
     }).catch((err) => {
-  
+
     });
   };
 }
 
-module.exports = NodeNotifyServer;
+export default NodeNotifyServer;

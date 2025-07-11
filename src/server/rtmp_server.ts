@@ -1,19 +1,23 @@
-// @ts-check
 //
 //  Created by Chen Mingliang on 23/12/01.
 //  illuspas@msn.com
 //  Copyright (c) 2023 Nodemedia. All rights reserved.
 //
 
-const fs = require("fs");
-const net = require("net");
-const tls = require("tls");
-const logger = require("../core/logger.js");
-const RtmpSession = require("../session/rtmp_session.js");
+import fs from "fs";
+import net from "net";
+import tls from "tls";
+import logger from "../core/logger";
+import RtmpSession from "../session/rtmp_session";
+
+/* eslint-disable */
 
 class NodeRtmpServer {
+  config: any;
+  tcpServer: net.Server | undefined;
+  tlsServer: tls.Server | undefined;
 
-  constructor(config) {
+  constructor(config: any) {
     this.config = config;
     if (this.config.rtmp?.port) {
       this.tcpServer = net.createServer(this.handleRequest);
@@ -36,13 +40,10 @@ class NodeRtmpServer {
     });
   };
 
-  /**
-   * @param {net.Socket} socket 
-   */
-  handleRequest = (socket) => {
+  handleRequest = (socket: net.Socket) => {
     const session = new RtmpSession(socket);
     session.run();
   };
 }
 
-module.exports = NodeRtmpServer;
+export default NodeRtmpServer;

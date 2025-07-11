@@ -2,11 +2,11 @@
   "name": "node-media-server",
   "description": "A Node.js implementation of RTMP Server",
   "version": "4.0.18",
-  "bin": "bin/app.js",
-  "main": "src/index.js",
+  "bin": "bin/app.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "watch": "nodemon bin/app.js",
-    "start": "node bin/app.js",
+    "watch": "nodemon bin/app.ts",
+    "start": "node bin/app.ts",
     "lint" : "yarn eslint --fix"
   },
   "keywords": [

@@ -1,29 +1,26 @@
-// @ts-check
 //
 //  Created by Chen Mingliang on 24/11/30.
 //  illuspas@msn.com
 //  Copyright (c) 2024 Nodemedia. All rights reserved.
 //
 
-const net = require("net");
-const Rtmp = require("../protocol/rtmp.js");
-const logger = require("../core/logger.js");
-const Context = require("../core/context.js");
-const AVPacket = require("../core/avpacket.js");
-const BaseSession = require("./base_session.js");
-const BroadcastServer = require("../server/broadcast_server.js");
-const querystring = require("node:querystring");
+/* eslint-disable */
 
-/**
- * @class
- * @augments BaseSession
- */
+import net from "net";
+import Rtmp from "../protocol/rtmp";
+import logger from "../core/logger";
+import Context from "../core/context";
+import AVPacket from "../core/avpacket";
+import BaseSession from "./base_session";
+import BroadcastServer from "../server/broadcast_server";
+
 class RtmpSession extends BaseSession {
-  /**
-   * 
-   * @param {net.Socket} socket 
-   */
-  constructor(socket) {
+  socket: net.Socket;
+  rtmp: Rtmp;
+  broadcast: BroadcastServer;
+  isPublisher: boolean | undefined;
+
+  constructor(socket: net.Socket) {
     super();
     this.socket = socket;
     this.ip = socket.remoteAddress + ":" + socket.remotePort;
@@ -43,15 +40,7 @@ class RtmpSession extends BaseSession {
     this.socket.on("error", this.onError);
   };
 
-  /**
-   * 
-   * @param {object} req 
-   * @param {string} req.app 
-   * @param {string} req.name
-   * @param {string} req.host 
-   * @param {object} req.query 
-   */
-  onConnect = (req) => {
+  onConnect = (req: { app: string; name: string; host: string; query: any; }) => {
     this.streamApp = req.app;
     this.streamName = req.name;
     this.streamHost = req.host;
@@ -84,27 +73,15 @@ class RtmpSession extends BaseSession {
     logger.info(`RTMP session ${this.id} ${this.ip} start push ${this.streamPath}`);
   };
 
-  /**
-   * rtmp protocol need output buffer
-   * @param {Buffer} buffer 
-   */
-  onOutput = (buffer) => {
+  onOutput = (buffer: Buffer) => {
     this.socket.write(buffer);
   };
 
-  /**
-   * 
-   * @param {AVPacket} packet 
-   */
-  onPacket = (packet) => {
+  onPacket = (packet: AVPacket) => {
     this.broadcast.broadcastMessage(packet);
   };
 
-  /**
-   * 
-   * @param {Buffer} data 
-   */
-  onData = (data) => {
+  onData = (data: Buffer) => {
     this.inBytes += data.length;
     let err = this.rtmp.parserData(data);
     if (err != null) {
@@ -122,29 +99,18 @@ class RtmpSession extends BaseSession {
     }
   };
 
-  /**
-   * 
-   * @param {Error} error 
-   */
-  onError = (error) => {
+  onError = (error: Error) => {
     logger.info(`RTMP session ${this.id} socket error, ${error.name}: ${error.message}`);
   };
 
-  /**
-   * @abstract
-   * @param {Buffer} buffer
-   */
-  sendBuffer = (buffer) => {
+  sendBuffer = (buffer: Buffer) => {
     this.outBytes += buffer.length;
     this.socket.write(buffer);
   };
 
-  /**
-   * @override
-   */
   close = () => {
     this.socket.end();
   };
 }
 
-module.exports = RtmpSession;
+export default RtmpSession;

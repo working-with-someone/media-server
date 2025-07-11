@@ -1,18 +1,22 @@
-// @ts-check
 //
 //  Created by Chen Mingliang on 25/04/24.
 //  illuspas@msn.com
 //  Copyright (c) 2025 Nodemedia. All rights reserved.
 //
 
-const fs = require("node:fs");
-const path = require("node:path");
-const logger = require("../core/logger.js");
-const Context = require("../core/context.js");
-const NodeRecordSession = require("../session/record_session.js");
+import fs from "node:fs";
+import path from "node:path";
+import logger from "../core/logger";
+import Context from "../core/context";
+import NodeRecordSession from "../session/record_session";
+import BaseSession from "../session/base_session.js";
+
+/* eslint-disable */
 
 class NodeRecordServer {
-  constructor(config) {
+  config: any;
+
+  constructor(config: any) {
     this.config = config;
   }
 
@@ -26,7 +30,7 @@ class NodeRecordServer {
         return;
       }
       logger.info(`Record server start on the path ${this.config.record.path}`);
-      Context.eventEmitter.on("postPublish", (session) => {
+      Context.eventEmitter.on("postPublish", (session: BaseSession) => {
         let filePath = path.join(this.config.record.path, session.streamPath, Date.now() + ".flv");
         let sess = new NodeRecordSession(session, filePath);
         sess.run();
@@ -36,4 +40,4 @@ class NodeRecordServer {
 
 };
 
-module.exports = NodeRecordServer;
+export default NodeRecordServer;
