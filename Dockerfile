@@ -1,11 +1,13 @@
-FROM --platform=$TARGETPLATFORM node:lts-alpine
+FROM node:23-alpine
 
-WORKDIR /node-media-server
+WORKDIR /app
 
 COPY . .
 
 RUN npm install --production
 
-EXPOSE 1935 8000 8443
+RUN yarn install
 
-CMD ["node", "bin/app.js"]
+EXPOSE 1935 1936 8010 8443 1080
+
+CMD ["yarn", "run", "watch"]
