@@ -5,9 +5,9 @@
   "bin": "bin/app.ts",
   "main": "src/index.ts",
   "scripts": {
-    "watch": "nodemon bin/app.ts",
-    "start": "node bin/app.ts",
-    "lint" : "yarn eslint --fix"
+    "watch": "dotenvx run --env-file=.env -- nodemon bin/app.ts",
+    "start": "dotenvx run --env-file=.env node bin/app.ts",
+    "lint": "yarn eslint --fix"
   },
   "keywords": [
     "rtmp",
@@ -33,6 +33,7 @@
     "typescript-eslint": "^8.36.0"
   },
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.51.4",
     "@tus/file-store": "^2.0.0",
     "@tus/server": "^2.2.0",
     "cors": "^2.8.5",

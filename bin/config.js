@@ -1,9 +1,7 @@
-// shit
-
 module.exports = {
   bind: "::",
   notify: {
-    url: "",
+    url: process.env.LIVE_SESSION_HUB_SERVER_URL,
   },
   auth: {
     play: false,
