@@ -44,6 +44,10 @@ class NodeNotifyServer {
   notify(action: string, session: BaseSession) {
     fetch(this.config.notify.url, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json", // 이 부분이 중요합니다!
+        Accept: "application/json",
+      },
       body: JSON.stringify({
         id: session.id,
         ip: session.ip,
@@ -58,15 +62,14 @@ class NodeNotifyServer {
         filePath: session.filePath,
         action: action,
       }),
-    }
-    ).then((res) => {
-      if (res.status !== 200) {
-        session.close();
-      }
-    }).catch((err) => {
-
-    });
-  };
+    })
+      .then((res) => {
+        if (res.status !== 200) {
+          session.close();
+        }
+      })
+      .catch((err) => {});
+  }
 }
 
 export default NodeNotifyServer;
