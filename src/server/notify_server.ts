@@ -42,7 +42,7 @@ class NodeNotifyServer {
   }
 
   notify(action: string, session: BaseSession) {
-    fetch(this.config.notify.url, {
+    fetch(new URL("/notify", this.config.notify.url).href, {
       method: "POST",
       headers: {
         "Content-Type": "application/json", // 이 부분이 중요합니다!
