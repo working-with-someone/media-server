@@ -28,10 +28,11 @@ module.exports = {
     port: 1080,
   },
   static: {
-    router: "/",
-    root: "./video",
+    router: "/media",
+    root: "./media",
   },
+
   record: {
-    path: "./video/record",
+    path: "./media/record",
   },
 };
