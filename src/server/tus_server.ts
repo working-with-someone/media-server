@@ -1,8 +1,9 @@
-import { Server } from "@tus/server";
+import { Server, Upload } from "@tus/server";
 import { FileStore } from "@tus/file-store";
 import path from "node:path";
 import logger from "../core/logger";
 import { MediaServerConfig, TusServerConfig } from "../config/server.config";
+import type { ServerRequest as Request } from "srvx/types";
 
 class TusServer {
   config: TusServerConfig;
@@ -19,6 +20,16 @@ class TusServer {
         datastore: new FileStore({
           directory: path.join(process.cwd(), "media/video"),
         }),
+        onUploadFinish: async (req: Request, upload: Upload) => {
+          const body = JSON.stringify({
+            video_id: upload.id,
+          });
+
+          return {
+            status_code: 200,
+            body,
+          };
+        },
       });
     }
   }
